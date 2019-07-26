@@ -1,81 +1,120 @@
 module ApplicationHelper
-  def straight_flash(suit1, suit2, suit3, suit4, suit5, number1, number2, number3, number4, number5, result)
-    if suit1 == suit2 && suit1 == suit3 && suit1 == suit4 && suit1 == suit5
-      if number1 == number2 && number1 == number3 && number1 == number4 && number1 == number5
-        result = 1
+  def straight_flush(suits, numbers)
+    count = Hash.new(0)
+    suits.each { | v | count.store(v, count[v]+1) }
+    numbers = numbers.sort_by(&:to_i)
+
+    result1 = numbers[4].to_i - numbers[3].to_i
+    result2 = numbers[3].to_i - numbers[2].to_i
+    result3 = numbers[2].to_i - numbers[1].to_i
+    result4 = numbers[1].to_i - numbers[0].to_i
+
+    if count.first[1] == 5
+      if result1.equal?(1) && result2.equal?(1) && result3.equal?(1) && result4.equal?(1)
+        result = true
       else
-        result = 0
+        result = false
       end
-    end
-
-    return result
-  end
-
-  def flash(suit1, suit2, suit3, suit4, suit5, result)
-    if suit1 == suit2 && suit2 == suit3 && suit3 == suit4 && suit4 == suit5
-      result = 1
     else
-      result = 0
+      result = false
     end
 
     return result
   end
 
-  def four_of_a_kind(suit1, suit2, suit3, suit4, suit5, result)
-    if suit1 == suit2 && suit1 == suit3 && suit1 == suit4
-      result = 1
-    elsif suit1 == suit2 && suit1 == suit3 && suit1 == suit5
-      result = 1
-    elsif suit1 == suit2 && suit1 == suit4 && suit1 == suit5
-      result = 1
-    elsif suit1 == suit3 && suit1 == suit4 && suit1 == suit5
-      result = 1
-    elsif suit2 == suit3 && suit2 == suit4 && suit2 == suit5
-      result = 1
+  def four_of_a_kind(numbers)
+    count = Hash.new(0)
+    numbers.each { | v | count.store(v, count[v]+1) }
+    count = count.values.sort
+
+    if count[1].equal?(4)
+      result = true
     else
-      result = 0
+      result = false
     end
 
     return result
   end
 
-  def full_house(number1, number2, number3, number4, number5, result)
-    if number1 == number2 && number2 == number3
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
-    elsif number1 == number2 && number1 == number4
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
-    elsif number1 == number2 && number1 == number5
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
-    elsif number1 == number3 && number1 == number4
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
-    elsif number1 == number3 && number1 == number5
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
-    elsif number1 == number4 && number1 == number5
-      if number4 == number5
-        result = 1
-      else
-        result = 0
-      end
+  def full_house(numbers)
+    count = Hash.new(0)
+    numbers.each { | v | count.store(v, count[v]+1) }
+    count = count.values.sort
+    if count[0].equal?(2) && count[1].equal?(3)
+      result = true
+    else
+      result = false
+    end
+    return result
+  end
+
+  def flush(suits)
+    count = Hash.new(0)
+    suits.each { | v | count.store(v, count[v]+1) }
+
+    if count.first[1].equal?(5)
+      result = true
+    else
+      result = false
+    end
+
+    return result
+  end
+  
+  def straight(numbers)
+    numbers = numbers.sort_by(&:to_i)
+
+    result1 = numbers[4].to_i - numbers[3].to_i
+    result2 = numbers[3].to_i - numbers[2].to_i
+    result3 = numbers[2].to_i - numbers[1].to_i
+    result4 = numbers[1].to_i - numbers[0].to_i
+
+    if result1.equal?(1) && result2.equal?(1) && result3.equal?(1) && result4.equal?(1)
+      result = true
+    else
+      result = false
+    end
+
+    return result
+  end
+
+  def three_of_a_kind(numbers)
+    count = Hash.new(0)
+    numbers.each { | v | count.store(v, count[v]+1) }
+    count = count.values.sort.reverse
+
+    if count[0].equal?(3)
+      result = true
+    else
+      result = false
+    end
+
+    return result
+  end
+
+  def two_pair(numbers)
+    count = Hash.new(0)
+    numbers.each { | v | count.store(v, count[v]+1) }
+    count = count.values.sort.reverse
+
+    if count[0].equal?(2) && count[1].equal?(2)
+      result = true
+    else
+      result = false
+    end
+
+    return result
+  end
+
+  def one_pair(numbers)
+    count = Hash.new(0)
+    numbers.each { | v | count.store(v, count[v]+1) }
+    count = count.values.sort.reverse
+
+    if count[0].equal?(2)
+      result = true
+    else
+      result = false
     end
 
     return result
