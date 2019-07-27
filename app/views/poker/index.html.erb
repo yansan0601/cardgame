@@ -1,0 +1,58 @@
+<%= form_tag(poker_index_path, method: 'post') do %>
+  <table class="table">
+    <tr>
+      <td>
+        <%= text_field_tag :card, '', class: "keyword-input", placeholder: "Card" %>
+      </td>
+      <td><%= submit_tag "Check" %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<% if @card %>
+  <%= @hand = @card.split(' ') %><br>
+
+  <!-- putting all suits into one array starts -->
+  <% @suits = [@hand.first[0], @hand.second[0], @hand.third[0], @hand.fourth[0], @hand.fifth[0]] %>
+  <!-- putting all suits into one array ends -->
+
+  <!-- putting all numbers into one array starts -->
+  <% @numbers = [@hand.first[1, 2], @hand.second[1, 2], @hand.third[1, 2], @hand.fourth[1, 2], @hand.fifth[1, 2]] %>
+  <% @numbers.sort_by(&:to_i) %>
+  <!-- putting all numbers into one array ends -->
+
+  <% if straight_flush(@suits, @numbers) %>
+    Straight Flush
+  <% else %>
+    <% if four_of_a_kind(@numbers) %>
+      Four of a kind
+    <% else %>
+      <% if full_house(@numbers) %>
+        Full House
+      <% else %>
+        <% if flush(@suits) %>
+          Flush
+        <% else %>
+          <% if straight(@numbers) %>
+            Straight
+          <% else %>
+            <% if three_of_a_kind(@numbers) %>
+              Three of a kind
+            <% else %>
+              <% if two_pair(@numbers) %>
+                Two Pair
+              <% else %>
+                <% if one_pair(@numbers) %>
+                  One Pair
+                <% else %>
+                  High Card
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
